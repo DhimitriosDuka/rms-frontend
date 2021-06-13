@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Menu Item</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  </head>
+  <body>
+  <%- include('./partial/navBarMain.ejs') %>
+  <div class="container-fluid p-0">
+      <div id="carouselExampleSlidesOnly" class="carousel slide " data-ride="carousel">
+          <div class="carousel-inner">
+              <div class="carousel-item active">
+                  <img src="/img/background.jpg">
+                  <div class="carousel-caption d-none d-md-block">
+                      <h5>JRMS</h5>
+                      <p class="border-bottom">Just another Restaurant Management System</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="container mt-5">
+        <div class="row">
+              <div class="col-4">
+                <div class="row">
+                  <h4>Category</h4>
+                  <p><%= menuItem.category.replace("_", " ") %></p>
+                </div>
+                <div class="row">
+                  <h4>Type</h4>
+                  <p><%= menuItem.type.replace("_", " ")  %></p>
+                </div>
+              </div>
+              <div class="col-4">
+                  <div class="row">
+                      <h4>Name</h4>
+                      <p><%= menuItem.name %></p>
+                  </div>
+                  <div class="row">
+                      <h4>Price</h4>
+                      <p><%= menuItem.price %> $</p>
+                  </div>
+                  <div class="row">
+                      <h4>Michelin Stars</h4>
+                      <p><%= menuItem.michelinStars %> *</p>
+                  </div>
+                  <div class="row">
+                      <h4>Course</h4>
+                      <p><%= menuItem.course.replace("_", " ") %></p>
+                  </div>
+                  <div class="row">
+                      <h4>Description</h4>
+                      <p><%= menuItem.description %></p>
+                  </div>
+              </div>
+            <div class="col-4">
+                <div class="row">
+                    <h4>Ingredients</h4>
+                    <div class="row">
+
+                        <ul class="list-group list-group-flush">
+                            <% menuItem.menuItemIngredient.forEach(i => {%>
+                                <li class="list-group-item">
+                                    <p>
+                                        <button class="btn pb-0" type="button" data-toggle="collapse" data-target="#ingredient<%= i.ingredient.id %>" aria-expanded="false" aria-controls="collapseExample">
+                                        <%= i.ingredient.name %>
+                                        </button>
+                                    </p>
+                                    <div class="collapse" id="ingredient<%= i.ingredient.id %>">
+                                        <div class="card card-body mb-5 border-0 shadow-sm">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">Amount: <%= i.ingredient.amount%> <%= i.ingredient.unit%></li>
+                                                <li class="list-group-item">Calories: <%= i.ingredient.calories%> Cal.</li>
+                                                <li class="list-group-item">Fat: <%= i.ingredient.fat%>%</li>
+                                                <li class="list-group-item">Cholesterol: <%= i.ingredient.cholesterol%>%</li>
+                                                <li class="list-group-item">Sodium: <%= i.ingredient.sodium%>%</li>
+                                                <li class="list-group-item">Protein: <%= i.ingredient.protein%>%</li>
+                                                <li class="list-group-item">Sugar: <%= i.ingredient.sugar%>%</li>
+                                                <li class="list-group-item">Food group: <%= i.ingredient.foodGroup%></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+        <div class="row d-flex">
+            <form method="post" action="/menu-item/<%=menuItem.id%>/add-to-cart" class="d-flex justify-content-center mt-4">
+                <div class="col-3">
+                    <label>Amount
+                        <input type="number" name="amount" class="form-control border-0 border-bottom" value="1" min="1">
+                    </label>
+                </div>
+                <div class="col-3">
+                    <input type="submit" class="btn border-bottom w-100 mt-4" value="Add to cart">
+                </div>
+            </form>
+        </div>
+    </div>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.1/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</html>
