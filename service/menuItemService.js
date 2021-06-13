@@ -33,9 +33,57 @@ module.exports = {
 
     saveMenuItem: (req, res) => {
 
-        axios.post()
-        res.send(req.body);
+        axios.post('http://localhost:8081/menuItems', {
+                name: req.body.name,
+                price: req.body.price,
+                michelinStart: req.body.michelinStart,
+                description: req.body.description,
+                course: req.body.course,
+                type: req.body.type,
+                currency: req.body.currency,
+                category: req.body.category
+            }, {
+            headers: {
+                'Authorization': `Bearer ${req.session.token.token}`
+            }
+        }).then(response =>  {
+            const createdMenuItemId = response.data.id;
+            const amounts = req.body.amounts.split(", ");
+            let index = 0;
 
+            req.body.ingredients.forEach(itemId => {
+                axios.get(`http://localhost:8081/ingredients/${itemId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${req.session.token.token}`
+                    }
+                })
+                    .then(ingredientResponse =>  {
+                        axios.post(`http://localhost:8081/menuItems/${createdMenuItemId}`, {
+
+                            amount: amounts[index],
+                            ingredient: ingredientResponse.data
+
+                        }, {
+                            headers: {
+                                'Authorization': `Bearer ${req.session.token.token}`
+                            }
+                        }).then(response =>  {
+                            index++;
+                        }).catch(error => {
+                            console.log(error);
+                        })
+                    }).catch(error => {
+                    console.log(error);
+                })
+            })
+            req.flash("success", `Menu item with name ${req.body.name} successfully created!`);
+            res.redirect("/menu-item");
+        }).catch(error => {
+            console.log(error);
+            res.send(error);
+            // req.flash('error', `Menu item with name ${req.body.name} already exists!`);
+            // res.redirect("/menu-item");
+        })
     },
 
     findMenuItemWithId: (req, res) => {
