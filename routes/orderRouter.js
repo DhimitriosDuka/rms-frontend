@@ -7,5 +7,6 @@ orderRouter.get("/:id", orderService.getSingleOrder);
 orderRouter.post("/:id/ship", orderService.shipOrder);
 orderRouter.get("/:id/update-amount", orderService.updateAmount);
 orderRouter.get("/:id/full", orderService.getFullOrder);
+orderRouter.get("/:id/cancel", orderService.cancelOrder);
 
 module.exports = orderRouter;

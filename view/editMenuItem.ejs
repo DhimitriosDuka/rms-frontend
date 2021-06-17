@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Title</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  </head>
+  <body>
+      <%- include('./partial/navbar.ejs') %>
+      <div class="row mt-4"></div>
+      <div class="container">
+          <% if(typeof messages.successMenuItem != 'undefined') {%>
+              <div class="alert alert-success" role="alert">
+                  <%= messages.successMenuItem %>
+              </div>
+          <% } %>
+          <h4>Edit menu item</h4>
+            <form method="post" action="/menu-item/<%= menuItem.id %>/edit">
+              <div class="row mt-5">
+                  <div class="form-group col-2">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control style-border border-0 border-bottom" name="name" value="<%= menuItem.name %>" id="name" required/>
+                  </div>
+
+                  <div class="form-group col-2">
+                    <label for="price">Price</label>
+                    <input type="number" class="form-control style-border border-0 border-bottom" name="price" id="price" min= "0" value= "<%= menuItem.price %>" step=".01"  required/>
+                  </div>
+
+                  <div class="form-group col-2">
+                    <label for="michelinStart">Michelin stars</label>
+                    <input type="number" class="form-control style-border border-0 border-bottom" name="michelinStart"id="michelinStart" min= "0" value="<%= menuItem.michelinStars %>" step=".01"/>
+                  </div>
+                  <div class="form-group col-2">
+                    <label for="course">Course</label>
+                    <select class="form-select  border-0 border-bottom" aria-label="Default select example border-0 border-bottom" name="course">
+                      <option value="HORS_DOEUVRES" <% if(menuItem.course === "HORS_DOEUVRES") {%> selected <%}%> >GRHORS DOEUVRESAM</option>
+                      <option value="AMUSE_BOUCHE" <% if(menuItem.course === "AMUSE_BOUCHE") {%> selected <%}%> >AMUSE BOUCHE</option>
+                      <option value="APPETIZER" <% if(menuItem.course === "APPETIZER") {%> selected <%}%> >APPETIZER</option>
+                      <option value="FIRST_MAIN_DISH" <% if(menuItem.course === "FIRST_MAIN_DISH") {%> selected <%}%> >FIRST MAIN DISH</option>
+                      <option value="PALATE_CLEANSER_COURSE" <% if(menuItem.course === "PALATE_CLEANSER_COURSE") {%> selected <%}%> >PALATE CLEANSER COURSE</option>
+                      <option value="SECOND_MAIN_DISH" <% if(menuItem.course === "SECOND_MAIN_DISH") {%> selected <%}%> >SECOND MAIN DISH</option>
+                      <option value="CHEESE_PLATE" <% if(menuItem.course === "CHEESE_PLATE") {%> selected <%}%> >CHEESE PLATE</option>
+                      <option value="DESSERT" <% if(menuItem.course === "DESSERT") {%> selected <%}%> >DESSERT</option>
+                      <option value="POST_MEAL_DRINKS_AND_PASTRIES"  <% if(menuItem.course === "POST_MEAL_DRINKS_AND_PASTRIES") {%> selected <%}%> >POST MEAL DRINKS AND PASTRIES</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group col-2">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control style-border border-0 border-bottom" name="description" id="description" value="<%= menuItem.description %>"/>
+                  </div>
+                  <div class="form-group col-2">
+                    <label for="type">Type</label>
+                    <select class="form-select  border-0 border-bottom" aria-label="Default select example border-0 border-bottom" name="type">
+                      <option value="DISH" <% if(menuItem.type === "DISH") {%> selected <%}%>selected>DISH</option>
+                      <option value="BEVERAGE" <% if(menuItem.type === "BEVERAGE") {%> selected <%}%> >BEVERAGE</option>
+                      <option value="SANDWICH" <% if(menuItem.type === "SANDWICH") {%> selected <%}%> >SANDWICH</option>
+                    </select>
+                  </div>
+              </div>
+
+              <div class="row justify-content-center mt-3">
+                <div class="form-group col-3">
+                  <label for="currency">Currency</label>
+                  <select class="form-select  border-0 border-bottom" aria-label="Default select example border-0 border-bottom" name="currency">
+                    <option value="USD" <% if(menuItem.currency === "USD") {%> selected <%}%>>USD</option>
+                    <option value="EUR" <% if(menuItem.currency === "EUR") {%> selected <%}%>>EUR</option>
+                    <option value="GBP" <% if(menuItem.currency === "GBP") {%> selected <%}%>>GBP</option>
+                    <option value="AUD" <% if(menuItem.currency === "AUD") {%> selected <%}%>>AUD</option>
+                    <option value="CAD" <% if(menuItem.currency === "CAD") {%> selected <%}%>>CAD</option>
+                    <option value="CHF" <% if(menuItem.currency === "CHF") {%> selected <%}%>>CHF</option>
+                    <option value="ALL" <% if(menuItem.currency === "ALL") {%> selected <%}%>>ALL</option>
+                  </select>
+                </div>
+
+                <div class="form-group col-3">
+                  <label for="category">Category</label>
+                  <select class="form-select border-0 border-bottom" aria-label="Default select example" name="category">
+                    <option value="VEGAN" <% if(menuItem.currency === "VEGAN") {%> selected <%}%>>VEGAN</option>
+                    <option value="NON_VEGAN" <% if(menuItem.currency === "NON_VEGAN") {%> selected <%}%>>NON VEGAN</option>
+                    <option value="DAIRY" <% if(menuItem.currency === "DAIRY") {%> selected <%}%>>DAIRY</option>
+                    <option value="DAIRY_FREE" <% if(menuItem.currency === "DAIRY_FREE") {%> selected <%}%>>DAIRY FREE</option>
+                  </select>
+                </div>
+              </div>
+                <div class="row justify-content-center mt-3">
+                    <input type="submit" class="btn border-bottom border-0 w-25">
+                </div>
+            </form>
+          <div class="row mt-5">
+              <ul class="list-group list-group-flush">
+                  <% menuItem.menuItemIngredient.forEach(ingredinet => {%>
+                      <li class="list-group-item">
+                          <p class="float-start"><%= ingredinet.ingredient.name %></p>
+                          <div class="float-end">
+                              <form method="post" action="/menu-item/<%= menuItem.id %>/ingredient/<%= ingredinet.ingredient.id%>">
+                                  <label>Amount
+                                      <input type="number" name="amount" class="border-0 border-bottom" value="<%= ingredinet.amount %>">
+                                      <input type="submit" class="btn border-0" value="Update amount">
+                                  </label>
+                              </form>
+                          </div>
+                          <div class="float-end me-3 pt-1">
+                              <a href="/menu-item/<%= menuItem.id %>/ingredient/<%= ingredinet.ingredient.id%>/delete">
+                                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/></svg>
+                              </a>
+                          </div>
+                      </li>
+                  <% }) %>
+              </ul>
+          </div>
+      </div>
+  </body>
+</html>

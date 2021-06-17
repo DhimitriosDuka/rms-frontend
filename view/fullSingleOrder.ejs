@@ -10,7 +10,8 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
 </head>
 	<body>
-	<%- include('./partial/navbar.ejs') %>
+	<%- include('./partial/navBarMain.ejs') %>
+	<div class="row mt-5"></div>
 	<div class="container mt-5">
 		<% if(messages.error) { %>
 			<div class="alert alert-danger" role="alert">
@@ -55,8 +56,19 @@
 			</div>
 		<% }) %>
 		<div class="alert alert-success" role="alert">
-			Total: <%= order.price %> $
+			Total: <%= order.price.toFixed(2) %> $
 		</div>
+
+			<%if(typeof show !== "undefined") {%>
+		<div class="row d-flex justify-content-center mt-3">
+			<div class="col-12">
+				<a href="/order/<%=order.id%>/cancel" class="btn btn-primary<%if (order.status !== "ONGOING") {%> disabled <%}%>">Cancel order</a>
+				<%if (order.status !== "ONGOING") {%>
+					<p class="text-muted">*Order cannot be canceled because it status has changed from <em>ONGOING</em></p>
+				<%}%>
+			</div>
+		</div>
+		<% } %>
 	</div>
 
 	</body>

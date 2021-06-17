@@ -5,10 +5,9 @@ module.exports = {
     allOrders: (req, res) => {
         axios.post(`http://localhost:8081/orders/all`, {}, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
-            console.log(response.data);
             res.render("orders", {orders: response.data})
         }).catch(error => {
             res.send(error);
@@ -19,7 +18,7 @@ module.exports = {
 
         axios.get(`http://localhost:8081/orders/${req.params.id}` ,{
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
             res.render("singleOrder", {order: response.data});
@@ -34,7 +33,7 @@ module.exports = {
 
         axios.put(`http://localhost:8081/orders/${req.params.id}/status`, {status: "DELIVERING"}, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
             req.flash("toast", `Order with number #${req.params.id} has been successfully been shipped!`);
@@ -68,14 +67,30 @@ module.exports = {
     getFullOrder:(req, res) => {
         axios.get(`http://localhost:8081/orders/${req.params.id}` ,{
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
-            res.render("fullSingleOrder", {order: response.data});
+            let show;
+            if(req.session.role !== "ADMIN") {
+                show = true;
+            }
+            res.render("fullSingleOrder", {order: response.data, cartItems: req.session.cart || [], show: show});
         }).catch(error => {
             console.log(error);
         })
 
+    },
+
+    cancelOrder: (req, res) => {
+            axios.post(`http://localhost:8081/orders/${req.params.id}/status/cancel` ,{}, {
+                headers: {
+                    'Authorization': `Bearer ${req.session.token}`
+                }
+            }).then(response =>  {
+                res.redirect("/main/my-orders");
+            }).catch(error => {
+                console.log(error);
+            })
     }
 
 }

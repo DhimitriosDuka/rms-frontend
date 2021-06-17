@@ -6,7 +6,7 @@ module.exports = {
 
         axios.post('http://localhost:8081/ingredients/all', {}, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
             res.render("ingredients", {
@@ -22,7 +22,7 @@ module.exports = {
 
         axios.post('http://localhost:8081/ingredients/save', req.body, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
             req.flash("success", `Ingredient with name ${req.body.name} successfully created!`);
@@ -37,7 +37,7 @@ module.exports = {
 
         axios.get(`http://localhost:8081/ingredients/${req.params.id}` ,{
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
             res.render("ingredientsEdit", {ingredient: response.data})
@@ -50,7 +50,7 @@ module.exports = {
     updateIngredient: (req, res) => {
         axios.put(`http://localhost:8081/ingredients/${req.params.id}`, req.body, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
             req.flash("success", `Ingredient with name ${req.body.name} successfully updated!`);

@@ -43,7 +43,7 @@
 			<% order.orderMenuItems.forEach(item => {%>
 			<div class="row mt-3 ms-3">
 				<h5><%= item.amount %>x <%= item.menuItem.name%></h5>
-				<h6>19.22$</h6>
+				<h6><%= item.price%></h6>
 			</div>
 			<% }) %>
 			<div class="alert alert-success" role="alert">

@@ -13,6 +13,7 @@ const ingredientRouter = require("./routes/ingredientRouter");
 const menuItemRouter = require("./routes/menuItemRouter");
 const orderRouter = require("./routes/orderRouter");
 const mainPageRouter = require("./routes/mainRouter");
+const deliveryRouter = require("./routes/userRouter");
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/view");
@@ -43,6 +44,7 @@ app.use("/ingredient", ingredientRouter);
 app.use("/menu-item", menuItemRouter);
 app.use("/order", orderRouter);
 app.use("/main", mainPageRouter);
+app.use("/user", deliveryRouter);
 
 app.listen(port, () => {
     console.log(`Server listening at port ${port}`);

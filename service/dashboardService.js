@@ -4,17 +4,17 @@ module.exports = {
     loadDashboard: (req, res) => {
         const ordersPath = axios.post('http://localhost:8081/orders/all', {status: "ONGOING"}, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         });
         const lineChartDataPath = axios.get('http://localhost:8081/orders/report', {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         });
         const pieChartDataPath = axios.get('http://localhost:8081/orders/report/food-group', {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         });
 

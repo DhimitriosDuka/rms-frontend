@@ -49,7 +49,8 @@ module.exports = {
                                 price: item.price,
                                 ingredients: item.menuItemIngredient.map(ingredient => ingredient.ingredient.name).join(", ")
                             }
-                        })
+                        }),
+                    cartItems: req.session.cart || []
                 })
             }).catch(error => {
             console.log(error);
@@ -59,6 +60,73 @@ module.exports = {
 
     getCheckOutPage: (req, res) => {
         res.render("checkout", {menuItems: req.session.cart, cartItems: req.session.cart});
+    },
+
+    checkout: (req, res) => {
+
+        const orderMenuItems = [];
+
+        req.session.cart.forEach(item => {
+            const obj = {
+                menuItem: {
+                    id: item.item.id,
+                    name: item.item.name,
+                    price: item.item.price,
+                    michelinStars: item.item.michelinStars,
+                    course: item.item.course,
+                    description: item.item.description,
+                    type: item.item.type,
+                    category: item.item.category,
+                    available: item.item.available,
+                    currency:item.item.currency,
+                    calories: item.item.calories
+                },
+                amount: item.amount
+            }
+            orderMenuItems.push(obj);
+        })
+
+        axios.post(`http://localhost:8081/orders` , {
+
+            phoneNumber: req.body.phoneNumber,
+            address: req.body.address,
+            orderMenuItems: orderMenuItems
+
+        }, {
+            headers: {
+                'Authorization': `Bearer ${req.session.token}`
+            }
+        })
+            .then(response =>  {
+              req.session.cart = []
+              req.flash("succes", "Order placed successfully!");
+              res.redirect("/main");
+            }).catch(error => {
+            console.log(error);
+        })
+
+    },
+
+    getMyOrders: (req, res) => {
+
+        if(req.session.token === undefined) {
+            res.redirect("/");
+        } else {
+            axios.get(`http://localhost:8081/orders/report/all` ,{
+                headers: {
+                    'Authorization': `Bearer ${req.session.token}`
+                }
+            }).then(response =>  {
+                console.log(response)
+                res.render("myOrders", {
+                    orders: response.data,
+                    cartItems: req.session.cart || []
+                })
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+
     }
 
 

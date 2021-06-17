@@ -6,12 +6,12 @@ module.exports = {
 
         const menuItems = axios.post('http://localhost:8081/menuItems/all', {}, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         });
         const ingredients = axios.post('http://localhost:8081/ingredients/all', {}, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         });
 
@@ -44,7 +44,7 @@ module.exports = {
                 category: req.body.category
             }, {
             headers: {
-                'Authorization': `Bearer ${req.session.token.token}`
+                'Authorization': `Bearer ${req.session.token}`
             }
         }).then(response =>  {
             const createdMenuItemId = response.data.id;
@@ -54,7 +54,7 @@ module.exports = {
             req.body.ingredients.forEach(itemId => {
                 axios.get(`http://localhost:8081/ingredients/${itemId}`, {
                     headers: {
-                        'Authorization': `Bearer ${req.session.token.token}`
+                        'Authorization': `Bearer ${req.session.token}`
                     }
                 })
                     .then(ingredientResponse =>  {
@@ -65,7 +65,7 @@ module.exports = {
 
                         }, {
                             headers: {
-                                'Authorization': `Bearer ${req.session.token.token}`
+                                'Authorization': `Bearer ${req.session.token}`
                             }
                         }).then(response =>  {
                             index++;
@@ -79,10 +79,8 @@ module.exports = {
             req.flash("success", `Menu item with name ${req.body.name} successfully created!`);
             res.redirect("/menu-item");
         }).catch(error => {
-            console.log(error);
-            res.send(error);
-            // req.flash('error', `Menu item with name ${req.body.name} already exists!`);
-            // res.redirect("/menu-item");
+            req.flash("error", `Menu item with name ${req.body.name} already exists!`);
+            res.redirect("/menu-item");
         })
     },
 
@@ -129,6 +127,106 @@ module.exports = {
                 })
         }
 
+    },
+
+    getUpdatePage: (req, res) => {
+
+        axios.get(`http://localhost:8081/menuItems/${req.params.id}`)
+            .then(response =>  {
+                console.log(response.data);
+                res.render("editMenuItem", {menuItem: response.data});
+            }).catch(error => {
+            console.log(error);
+        })
+
+    },
+
+    updateMenuItem: (req, res) => {
+
+        axios.put(`http://localhost:8081/menuItems/${req.params.id}`, req.body, {
+            headers: {
+                'Authorization': `Bearer ${req.session.token.token}`
+            }
+        })
+            .then(response =>  {
+                req.flash("successMenuItem", `Menu Item with name ${req.body.name} has been successfully updated!`)
+                res.redirect("/menu-item");
+            }).catch(error => {
+            console.log(error);
+        })
+
+    },
+
+    updateAmountOfIngredient: (req, res) => {
+
+        axios.put(`http://localhost:8081/menuItems/${req.params.itemId}/ingredients/${req.params.ingredientId}`, {
+            amount: req.body.amount
+        }, {
+            headers: {
+                'Authorization': `Bearer ${req.session.token}`
+            }
+        })
+            .then(response =>  {
+                req.flash("successMenuItem", `Menu Item has been successfully updated!`);
+                res.redirect(`/menu-item/${req.params.itemId}/edit`);
+            }).catch(error => {
+            console.log(error);
+        })
+
+    },
+
+    deleteIngredientOfItem: (req, res) => {
+
+        axios.delete(`http://localhost:8081/menuItems/${req.params.itemId}/ingredients/${req.params.ingredientId}`, {
+            headers: {
+                'Authorization': `Bearer ${req.session.token}`
+            }
+        })
+            .then(response =>  {
+                req.flash("successMenuItem", `Menu Item has been successfully updated!`);
+                res.redirect(`/menu-item/${req.params.itemId}/edit`);
+            }).catch(error => {
+            console.log(error);
+        })
+
+    },
+
+    updateAvailability: (req, res) => {
+        axios.get(`http://localhost:8081/menuItems/${req.params.itemId}`, {
+            headers: {
+                'Authorization': `Bearer ${req.session.token}`
+            }
+        })
+            .then(response =>  {
+                response.data.available = false;
+                console.log(response.data);
+                axios.put(`http://localhost:8081/menuItems/${req.params.itemId}`, {
+                    name: response.data.name,
+                    price: response.data.price,
+                    michelinStarts: response.data.michelinStarts,
+                    course: response.data.course,
+                    description: response.data.description,
+                    type: response.data.type,
+                    category: response.data.category,
+                    currency: response.data.currency,
+                    available: req.query.value
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${req.session.token}`
+                    }
+                })
+                    .then(response =>  {
+                        console.log(response.data);
+                        req.flash("successMenuItem", `Menu Item with name ${req.body.name} has been successfully deleted!`)
+                        res.redirect("/menu-item");
+                    }).catch(error => {
+                    console.log(error);
+                })
+            }).catch(error => {
+            console.log(error);
+        })
+
     }
+
 
 }
